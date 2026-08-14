@@ -1,0 +1,51 @@
+:root {
+  --bg-gradient: linear-gradient(160deg, #FFF8F2 0%, #FDE9DA 100%);
+  --panel-bg: #ffffff; --text-main: #1C1310; --text-muted: #6B5A4E;
+  --border-color: #F0DFCF; --input-bg: #ffffff;
+  --nav-inactive-bg: #FBF2E9; --nav-inactive-text: #3D2E24;
+  --brand: #EA580C; --brand-dark: #C2410C; --brand-light: #FDEDE1;
+}
+.dark-theme {
+  --bg-gradient: linear-gradient(160deg, #1A130E 0%, #0F0A07 100%);
+  --panel-bg: #241A14; --text-main: #FBF2E9; --text-muted: #B9A896;
+  --border-color: #3D2E24; --input-bg: #17110D;
+  --nav-inactive-bg: #3D2E24; --nav-inactive-text: #E4D4C4;
+  --brand: #FB7C3C; --brand-dark: #EA580C; --brand-light: rgba(234,88,12,.18);
+}
+body { background: var(--bg-gradient); color: var(--text-main); font-family: 'Inter', system-ui, -apple-system, sans-serif; min-height: 100vh; transition: background 0.2s, color 0.2s; }
+.font-black { font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif; letter-spacing: -0.01em; }
+.gourmet-panel { background: var(--panel-bg); border: 1px solid var(--border-color); color: var(--text-main); box-shadow: 0 1px 2px rgba(28,19,16,.03), 0 10px 28px -18px rgba(234,88,12,.22); transition: box-shadow .25s ease; }
+.gourmet-input { background-color: var(--input-bg) !important; color: var(--text-main) !important; border: 1px solid var(--border-color) !important; transition: border-color .2s ease, box-shadow .2s ease; }
+.gourmet-input:focus { border-color: var(--brand) !important; box-shadow: 0 0 0 3px var(--brand-light) !important; }
+.gourmet-input::placeholder { color: var(--text-muted) !important; opacity: 0.7; }
+.gourmet-btn-primary { background: linear-gradient(135deg, var(--brand), var(--brand-dark)); color: white; font-weight: 800; padding: 0.7rem 1rem; border-radius: 0.75rem; font-size: 0.8rem; transition: transform .2s ease, box-shadow .2s ease; cursor: pointer; border: none; width: 100%; box-shadow: 0 10px 24px -10px rgba(234,88,12,.55); }
+.gourmet-btn-primary:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 14px 30px -10px rgba(234,88,12,.65); }
+.gourmet-btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+.brand-mark { background: linear-gradient(135deg, var(--brand), var(--brand-dark)); box-shadow: 0 6px 16px -6px rgba(234,88,12,.55); }
+.view-container { display: none !important; }
+.view-container.active { display: block !important; }
+.pos-items-scroller { height: calc(100vh - 290px); overflow-y: auto; }
+.pos-cart-scroller { height: calc(100vh - 560px); overflow-y: auto; min-height: 60px; }
+.input-field-error { border: 2px solid #ef4444 !important; background-color: #fef2f2 !important; animation: jitter 0.2s ease-in-out 2; }
+.dark-theme .input-field-error { background-color: #451a1a !important; }
+@keyframes jitter { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+@media (min-width: 1024px) {
+  .app-layout-grid { display: grid; grid-template-rows: 70px 1fr; height: 100vh; }
+  .pos-split-view { display: grid; grid-template-columns: 1fr 370px; gap: 1.25rem; }
+}
+@media (max-width: 1023px) {
+  .app-layout-grid { display: flex; flex-direction: column; }
+  .pos-split-view { display: flex; flex-direction: column; gap: 1rem; }
+  .pos-items-scroller, .pos-cart-scroller { height: auto; max-height: 350px; }
+  #top-navigation-row { flex-wrap: wrap; gap: 0.25rem; height: auto !important; padding: 0.5rem !important; }
+  #top-navigation-row button { font-size: 0.68rem; padding: 0.3rem 0.5rem; }
+}
+
+/* ---------- Demo banner ---------- */
+.demo-banner {
+  background: linear-gradient(90deg, var(--brand), var(--brand-dark)); color: #fff; text-align: center;
+  font-size: 0.78rem; font-weight: 700; padding: 7px 12px; letter-spacing: 0.01em;
+}
+.demo-banner a { text-decoration: underline; color: #fff; }
+.demo-hint { background: var(--brand-light); border: 1px dashed var(--brand); color: var(--brand-dark); border-radius: 10px; padding: 10px 14px; font-size: 0.78rem; font-weight: 600; margin-bottom: 16px; }
+.dark-theme .demo-hint { color: var(--brand); }

@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Orderly — Live Demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="app.css">
+  </head>
+  <body>
+
+  <div class="demo-banner">You're in the Orderly live demo — all data is local to your browser. <a href="index.html">&larr; Back to site</a></div>
+
+  <!-- LOGIN -->
+  <div id="authGate" class="min-h-screen flex items-center justify-center p-4">
+    <div class="gourmet-panel max-w-md w-full rounded-2xl shadow-2xl p-8">
+      <div class="text-center mb-6">
+        <div class="w-14 h-14 brand-mark rounded-xl flex items-center justify-center text-white text-xl mx-auto mb-3"><i class="fas fa-utensils"></i></div>
+        <h2 class="text-xl font-black tracking-tight">Orderly</h2>
+        <p class="text-xs mt-1" style="color:var(--text-muted);">Restaurant Point of Sale</p>
+      </div>
+      <div class="demo-hint"><i class="fas fa-key mr-1"></i> Demo login — Username: <b>admin</b> &nbsp; Password: <b>admin123</b></div>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider mb-1">Username</label>
+          <input type="text" id="userInput" class="w-full px-4 py-2.5 rounded-xl outline-none text-sm gourmet-input" placeholder="admin" onkeydown="handleLoginKeyPress(event)">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider mb-1">Password</label>
+          <input type="password" id="passwordInput" class="w-full px-4 py-2.5 rounded-xl outline-none text-sm gourmet-input" placeholder="••••••••" onkeydown="handleLoginKeyPress(event)">
+        </div>
+        <div id="authErrorMsg" class="text-rose-500 text-xs font-bold hidden"></div>
+        <button id="loginBtn" onclick="executeAuthentication()" class="gourmet-btn-primary">Secure Login</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN APP -->
+  <div id="appContainer" class="hidden app-layout-grid">
+    <header class="gourmet-panel px-4 flex items-center justify-between border-b" style="height:70px; overflow:hidden;">
+      <div class="flex items-center space-x-3 shrink-0">
+        <div class="w-9 h-9 brand-mark rounded-lg flex items-center justify-center text-white"><i class="fas fa-crown text-sm"></i></div>
+        <div>
+          <h2 class="text-sm font-black tracking-tight">Orderly</h2>
+          <p id="elegantClock" class="text-[10px] font-mono text-orange-500 font-bold mt-0.5"></p>
+        </div>
+      </div>
+      <div class="flex items-center gap-1 flex-wrap justify-end" id="top-navigation-row">
+        <button onclick="navigateView('home')" id="nav-home" style="background:var(--nav-inactive-bg);color:var(--nav-inactive-text);" class="px-2.5 py-1.5 text-xs font-bold rounded-lg transition"><i class="fas fa-chart-pie mr-1"></i>Dashboard</button>
+        <button onclick="navigateView('pos')" id="nav-pos" style="background:var(--nav-inactive-bg);color:var(--nav-inactive-text);" class="px-2.5 py-1.5 text-xs font-bold rounded-lg transition"><i class="fas fa-cash-register mr-1"></i>POS</button>
+        <button onclick="navigateView('tables')" id="nav-tables" style="background:var(--nav-inactive-bg);color:var(--nav-inactive-text);" class="px-2.5 py-1.5 text-xs font-bold rounded-lg transition"><i class="fas fa-chair mr-1"></i>Tables</button>
+        <button onclick="navigateView('reservations')" id="nav-reservations" style="background:var(--nav-inactive-bg);color:var(--nav-inactive-text);" class="px-2.5 py-1.5 text-xs font-bold rounded-lg transition"><i class="fas fa-calendar-check mr-1"></i>Reservations</button>
+        <button onclick="navigateView('ledger')" id="nav-ledger" style="background:var(--nav-inactive-bg);color:var(--nav-inactive-text);" class="px-2.5 py-1.5 text-xs font-bold rounded-lg transition"><i class="fas fa-book mr-1"></i>Ledger</button>
+        <button onclick="navigateView('crm')" id="nav-crm" style="background:var(--nav-inactive-bg);color:var(--nav-inactive-text);" class="px-2.5 py-1.5 text-xs font-bold rounded-lg transition"><i class="fas fa-users mr-1"></i>CRM</button>
+        <button onclick="navigateView('inventory')" id="nav-inventory" style="background:var(--nav-inactive-bg);color:var(--nav-inactive-text);" class="px-2.5 py-1.5 text-xs font-bold rounded-lg transition"><i class="fas fa-boxes mr-1"></i>Inventory</button>
+        <button onclick="navigateView('menu')" id="nav-menu" style="background:var(--nav-inactive-bg);color:var(--nav-inactive-text);" class="px-2.5 py-1.5 text-xs font-bold rounded-lg transition"><i class="fas fa-utensils mr-1"></i>Menu</button>
+        <button onclick="navigateView('staff')" id="nav-staff" style="background:var(--nav-inactive-bg);color:var(--nav-inactive-text);" class="px-2.5 py-1.5 text-xs font-bold rounded-lg transition"><i class="fas fa-user-shield mr-1"></i>Staff</button>
+        <button onclick="navigateView('reports')" id="nav-reports" style="background:var(--nav-inactive-bg);color:var(--nav-inactive-text);" class="px-2.5 py-1.5 text-xs font-bold rounded-lg transition"><i class="fas fa-file-alt mr-1"></i>Reports</button>
+        <div class="flex items-center gap-1.5 pl-2 border-l" style="border-color:var(--border-color);">
+          <div class="text-right hidden lg:block">
+            <p id="headerUserName" class="text-[10px] font-black"></p>
+            <p id="headerUserRole" class="text-[9px] font-bold text-orange-500"></p>
+          </div>
+          <button onclick="clearSessionData()" class="px-2.5 py-1.5 text-xs font-bold rounded-lg text-rose-600 bg-rose-50 hover:bg-rose-100 transition"><i class="fas fa-power-off"></i></button>
+        </div>
+      </div>
+    </header>
+
+    <main class="p-4 lg:p-5 overflow-y-auto">
+
+      <!-- DASHBOARD -->
+      <div id="view-home" class="view-container">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5">
+          <div class="gourmet-panel rounded-xl p-4 shadow-sm flex items-center justify-between">
+            <div><p class="text-[10px] font-bold uppercase tracking-wider" style="color:var(--text-muted);">Total Revenue</p><h3 class="text-xl font-black mt-1" id="dashTotalSales">₹0.00</h3></div>
+            <div class="w-9 h-9 bg-emerald-500/10 text-emerald-500 rounded-lg flex items-center justify-center"><i class="fas fa-wallet"></i></div>
+          </div>
+          <div class="gourmet-panel rounded-xl p-4 shadow-sm flex items-center justify-between">
+            <div><p class="text-[10px] font-bold uppercase tracking-wider" style="color:var(--text-muted);">Total Bills</p><h3 class="text-xl font-black mt-1" id="dashTotalBills">0</h3></div>
+            <div class="w-9 h-9 bg-orange-500/10 text-orange-500 rounded-lg flex items-center justify-center"><i class="fas fa-file-invoice-dollar"></i></div>
+          </div>
+          <div class="gourmet-panel rounded-xl p-4 shadow-sm flex items-center justify-between">
+            <div><p class="text-[10px] font-bold uppercase tracking-wider" style="color:var(--text-muted);">Avg Order</p><h3 class="text-xl font-black mt-1" id="dashAvgValue">₹0.00</h3></div>
+            <div class="w-9 h-9 bg-amber-500/10 text-amber-500 rounded-lg flex items-center justify-center"><i class="fas fa-calculator"></i></div>
+          </div>
+          <div class="gourmet-panel rounded-xl p-4 shadow-sm flex items-center justify-between">
+            <div><p class="text-[10px] font-bold uppercase tracking-wider mb-1" style="color:var(--text-muted);">Quick Access</p><div class="flex gap-1"><button onclick="navigateView('pos')" style="font-size:10px;background:#ea580c;color:white;padding:3px 8px;border-radius:6px;font-weight:700;border:none;cursor:pointer;">POS</button><button onclick="navigateView('tables')" style="font-size:10px;background:#10b981;color:white;padding:3px 8px;border-radius:6px;font-weight:700;border:none;cursor:pointer;">Tables</button></div></div>
+            <div class="w-9 h-9 bg-violet-500/10 text-violet-500 rounded-lg flex items-center justify-center"><i class="fas fa-bolt"></i></div>
+          </div>
+        </div>
+        <div class="gourmet-panel rounded-xl p-5 shadow-sm">
+          <h3 class="text-sm font-black mb-3">Payment Channel Breakdown</h3>
+          <div class="grid grid-cols-3 gap-3 text-center text-xs">
+            <div class="p-3 rounded-lg" style="background:var(--border-color);"><span class="block font-bold" style="color:var(--text-muted);">CASH</span><p class="text-base font-black mt-1" id="breakdownCash">₹0.00</p></div>
+            <div class="p-3 rounded-lg" style="background:var(--border-color);"><span class="block font-bold" style="color:var(--text-muted);">UPI</span><p class="text-base font-black mt-1" id="breakdownUpi">₹0.00</p></div>
+            <div class="p-3 rounded-lg" style="background:var(--border-color);"><span class="block font-bold" style="color:var(--text-muted);">CARD</span><p class="text-base font-black mt-1" id="breakdownCard">₹0.00</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- POS TERMINAL -->
+      <div id="view-pos" class="view-container">
+        <div class="pos-split-view">
+          <div class="space-y-3">
+            <div class="flex space-x-1.5 overflow-x-auto pb-1" id="posCategoryTabs"></div>
+            <div class="pos-items-scroller grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3" id="posMenuGrid"></div>
+          </div>
+          <div class="gourmet-panel rounded-xl p-3 shadow-md flex flex-col">
+            <h3 class="text-xs font-black uppercase tracking-wider mb-2 pb-1.5 border-b" style="border-color:var(--border-color);">Order & Checkout</h3>
+            <div class="grid grid-cols-2 gap-1.5 mb-2">
+              <input type="text" id="cartCustMobile" placeholder="Mobile No" class="gourmet-input col-span-2 px-3 py-1.5 text-xs rounded-lg outline-none">
+              <input type="text" id="cartCustName" placeholder="Customer Name" class="gourmet-input px-3 py-1.5 text-xs rounded-lg outline-none">
+              <input type="email" id="cartCustEmail" placeholder="Email" class="gourmet-input px-3 py-1.5 text-xs rounded-lg outline-none">
+              <input type="text" id="cartCustDob" placeholder="Date of birth" class="gourmet-input px-3 py-1.5 text-xs rounded-lg outline-none" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'">
+              <select id="cartTableSelect" class="gourmet-input px-3 py-1.5 text-xs rounded-lg outline-none"><option value="">No Table (Takeaway)</option></select>
+            </div>
+            <div class="pos-cart-scroller space-y-1.5 pr-0.5 mb-2" id="cartRows"></div>
+            <!-- Discount -->
+            <div class="border-t pt-2 mb-1" style="border-color:var(--border-color);">
+              <div class="flex items-center gap-1.5">
+                <select id="discountType" onchange="toggleDiscountRow()" class="gourmet-input px-2 py-1 text-xs rounded-lg outline-none flex-1">
+                  <option value="none">No Discount</option>
+                  <option value="percent">% Discount</option>
+                  <option value="flat">Flat ₹ Off</option>
+                </select>
+                <div id="discountRow" class="hidden flex items-center gap-1">
+                  <input type="number" id="discountValue" placeholder="Val" class="gourmet-input px-2 py-1 text-xs rounded-lg outline-none w-14">
+                  <button onclick="applyDiscount()" style="background:#f59e0b;color:white;font-weight:700;padding:4px 8px;border-radius:6px;font-size:11px;border:none;cursor:pointer;">Apply</button>
+                </div>
+              </div>
+            </div>
+            <!-- Totals -->
+            <div class="border-t pt-2 space-y-0.5 text-xs font-semibold mb-2" style="border-color:var(--border-color);">
+              <div class="flex justify-between" style="color:var(--text-muted);"><span>Subtotal:</span><span id="lblSubtotal">₹0.00</span></div>
+              <div class="flex justify-between" style="color:#d97706;"><span>Discount:</span><span id="lblDiscount">₹0.00</span></div>
+              <div class="flex justify-between" style="color:var(--text-muted);"><span>CGST+SGST 5%:</span><span id="lblTax">₹0.00</span></div>
+              <div class="flex justify-between text-sm font-black"><span>Net Payable:</span><span id="lblTotal">₹0.00</span></div>
+            </div>
+            <div class="grid grid-cols-3 gap-1.5">
+              <select id="cartPaymentMethod" class="gourmet-input px-2 py-2 text-xs font-bold rounded-lg outline-none">
+                <option value="CASH">Cash</option><option value="UPI">UPI</option><option value="CARD">Card</option>
+              </select>
+              <button id="checkoutBtn" onclick="commitActiveOrder()" class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 rounded-lg text-xs transition shadow">Checkout</button>
+              <button onclick="clearCart()" style="background:var(--border-color);color:#dc2626;font-weight:700;padding:8px;border-radius:8px;font-size:11px;border:none;cursor:pointer;">Clear</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TABLE MANAGEMENT -->
+      <div id="view-tables" class="view-container">
+        <div class="grid grid-cols-1 xl:grid-cols-4 gap-5">
+          <div class="gourmet-panel rounded-xl p-5 shadow-sm h-fit">
+            <h3 class="text-sm font-black mb-4">Add New Table</h3>
+            <div class="space-y-3">
+              <div><label class="block text-[11px] font-bold mb-0.5" style="color:var(--text-muted);">Table Name *</label><input type="text" id="newTableName" placeholder="e.g. Table 1, Garden A" class="gourmet-input w-full px-3 py-2 text-xs rounded-lg outline-none"></div>
+              <div><label class="block text-[11px] font-bold mb-0.5" style="color:var(--text-muted);">Seating Capacity</label><input type="number" id="newTableCapacity" value="4" min="1" class="gourmet-input w-full px-3 py-2 text-xs rounded-lg outline-none"></div>
+              <button onclick="addNewTable()" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 rounded-lg text-xs transition shadow">Add Table</button>
+            </div>
+            <div class="mt-4 p-3 rounded-lg space-y-1.5" style="background:var(--border-color);">
+              <p class="text-[10px] font-black mb-1" style="color:var(--text-muted);">Legend</p>
+              <div class="flex items-center gap-2 text-[10px] font-semibold"><span style="width:12px;height:12px;border-radius:50%;background:#10b981;display:inline-block;"></span>Free</div>
+              <div class="flex items-center gap-2 text-[10px] font-semibold"><span style="width:12px;height:12px;border-radius:50%;background:#ef4444;display:inline-block;"></span>Occupied</div>
+              <div class="flex items-center gap-2 text-[10px] font-semibold"><span style="width:12px;height:12px;border-radius:50%;background:#f59e0b;display:inline-block;"></span>Reserved</div>
+            </div>
+          </div>
+          <div class="xl:col-span-3 gourmet-panel rounded-xl p-5 shadow-sm">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-sm font-black">Floor Plan</h3>
+              <button onclick="syncTableGrid()" class="text-xs font-bold text-orange-600 hover:underline"><i class="fas fa-sync-alt mr-1"></i>Refresh</button>
+            </div>
+            <div id="tableGrid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RESERVATIONS -->
+      <div id="view-reservations" class="view-container">
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-5">
+          <div class="gourmet-panel rounded-xl p-5 shadow-sm h-fit">
+            <h3 class="text-sm font-black mb-4">New Reservation</h3>
+            <div class="space-y-3">
+              <div><label class="block text-[11px] font-bold mb-0.5" style="color:var(--text-muted);">Customer Name *</label><input type="text" id="resName" class="gourmet-input w-full px-3 py-2 text-xs rounded-lg outline-none"></div>
+              <div><label class="block text-[11px] font-bold mb-0.5" style="color:var(--text-muted);">Mobile *</label><input type="text" id="resMobile" class="gourmet-input w-full px-3 py-2 text-xs rounded-lg outline-none"></div>
+              <div class="grid grid-cols-2 gap-2">
+                <div><label class="block text-[11px] font-bold mb-0.5" style="color:var(--text-muted);">Date *</label><input type="date" id="resDate" class="gourmet-input w-full px-3 py-2 text-xs rounded-lg outline-none"></div>
+                <div><label class="block text-[11px] font-bold mb-0.5" style="color:var(--text-muted);">Time *</label><input type="time" id="resTime" class="gourmet-input w-full px-3 py-2 text-xs rounded-lg outline-none"></div>
+              </div>
+              <div><label class="block text-[11px] font-bold mb-0.5" style="color:var(--text-muted);">Party Size *</label><input type="number" id="resParty" min="1" value="2" class="gourmet-input w-full px-3 py-2 text-xs rounded-lg outline-none"></div>
+              <div><label class="block text-[11px] font-bold mb-0.5" style="color:var(--text-muted);">Assign Table</label><select id="resTable" class="gourmet-input w-full px-3 py-2 text-xs rounded-lg outline-none"><option value="">Not Assigned</option></select></div>
+              <div><label class="block text-[11px] font-bold mb-0.5" style="color:var(--text-muted);">Notes</label><textarea id="resNotes" rows="2" class="gourmet-input w-full px-3 py-2 text-xs rounded-lg outline-none resize-none" placeholder="Special requests..."></textarea></div>
+              <button onclick="submitReservation()" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 rounded-lg text-xs transition shadow">Confirm Reservation</button>
+            </div>
+          </div>
+          <div class="xl:col-span-2 gourmet-panel rounded-xl p-4 shadow-sm overflow-x-auto">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="text-sm font-black">Upcoming Reservations</h3>
+              <button onclick="syncReservations()" class="text-xs font-bold text-orange-600 hover:underline"><i class="fas fa-sync-alt mr-1"></i>Refresh</button>
+            </div>
+            <table class="w-full text-left text-xs border-collapse">
+              <thead><tr class="border-b" style="border-color:var(--border-color);color:var(--text-muted);"><th class="p-2 font-bold">ID</th><th class="p-2 font-bold">Guest</th><th class="p-2 font-bold">Mobile</th><th class="p-2 font-bold">Date &amp; Time</th><th class="p-2 font-bold text-center">Party</th><th class="p-2 font-bold">Table</th><th class="p-2 font-bold">Status</th></tr></thead>
+              <tbody id="reservationTbody" class="divide-y" style="border-color:var(--border-color);"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- LEDGER -->
+      <div id="view-ledger" class="view-container">
+        <div class="gourmet-panel rounded-xl shadow-sm p-4 overflow-x-auto">
+          <h3 class="text-sm font-black mb-3">Transaction Ledger</h3>
+          <table class="w-full text-left text-xs border-collapse">
+            <thead><tr class="border-b" style="border-color:var(--border-color);color:var(--text-muted);"><th class="p-3 font-bold">Invoice</th><th class="p-3 font-bold">Date</th><th class="p-3 font-bold">Customer</th><th class="p-3 font-bold">Amount</th><th class="p-3 font-bold">Method</th><th class="p-3 font-bold">Cashier</th></tr></thead>
+            <tbody id="ledgerTbody" class="divide-y" style="border-color:var(--border-color);"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- CRM -->
+      <div id="view-crm" class="view-container">
+        <div class="gourmet-panel rounded-xl shadow-sm p-4 overflow-x-auto">
+          <h3 class="text-sm font-black mb-3">Customer Database</h3>
+          <table class="w-full text-left text-xs border-collapse">
+            <thead><tr class="border-b" style="border-color:var(--border-color);color:var(--text-muted);"><th class="p-3 font-bold">ID</th><th class="p-3 font-bold">Name</th><th class="p-3 font-bold">Mobile</th><th class="p-3 font-bold">Email</th><th class="p-3 font-bold">DOB</th></tr></thead>
+            <tbody id="crmTbody" class="divide-y" style="border-color:var(--border-color);"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- INVENTORY -->
+      <div id="view-inventory" class="view-container">
+        <div class="grid grid-cols-1 xl:grid-cols-4 gap-5">
+          <div class="gourmet-panel rounded-xl p-5 shadow-sm h-fit">
+            <h3 class="text-sm font-black mb-4">Update Stock</h3>
+            <div class="space-y-3">
+              <div><label class="block text-[11px] font-bold mb-0.5" style="color:var(--text-muted);">Menu Item ID *</label><input type="text" id="stockItemId" placeholder="e.g. MI0001" class="gourmet-input w-full px-3 py-2 text-xs rounded-lg outline-none"></div>
+              <div><label class="block text-[11px] font-bold mb-0.5" style="color:var(--text-muted);">Quantity</label><input type="number" id="stockQty" min="1" value="1" class="gourmet-input w-full px-3 py-2 text-xs rounded-lg outline-none"></div>
+              <div><label class="block text-[11px] font-bold mb-0.5" style="color:var(--text-muted);">Operation</label><select id="stockOp" class="gourmet-input w-full px-3 py-2 text-xs rounded-lg outline-none"><option value="add">Add Stock</option><option value="set">Set Stock Level</option><option value="subtract">Subtract Stock</option></select></div>
+              <button onclick="updateStock()" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 rounded-lg text-xs transition shadow">Update Stock</button>
+              <button onclick="syncInventory()" class="w-full font-bold py-2 rounded-lg text-xs transition" style="background:var(--border-color);color:var(--text-main);border:none;cursor:pointer;">Refresh Inventory</button>
+            </div>
+          </div>
+          <div class="xl:col-span-3 gourmet-panel rounded-xl p-4 shadow-sm overflow-x-auto">
+            <h3 class="text-sm font-black mb-3">Stock Levels</h3>
+            <table class="w-full text-left text-xs border-collapse">
+              <thead><tr class="border-b" style="border-color:var(--border-color);color:var(--text-muted);"><th class="p-2 font-bold">Item</th><th class="p-2 font-bold">Category</th><th class="p-2 font-bold text-center">Stock</th><th class="p-2 font-bold text-center">Low Threshold</th><th class="p-2 font-bold">Status</th></tr></thead>
+              <tbody id="inventoryTbody" class="divide-y" style="border-color:var(--border-color);"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- MENU CONFIG -->
+      <div id="view-menu" class="view-container">
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-5">
+          <div class="gourmet-panel rounded-xl p-5 shadow-sm h-fit" id="menuFormPanel">
+            <h3 class="text-sm font-black mb-4">Add Menu Item</h3>
+            <div class="space-y-3">
+              <div><label class="block text-[11px] font-bold mb-0.5" style="color:var(--text-muted);">Item Name *</label><input type="text" id="mItemName" class="gourmet-input w-full px-3 py-2 text-xs rounded-lg outline-none"><p class="text-[10px] text-rose-500 font-bold mt-0.5 hidden field-err-msg">Required.</p></div>
+              <div><label class="block text-[11px] font-bold mb-0.5" style="color:var(--text-muted);">Category</label><select id="mItemCategory" class="gourmet-input w-full px-3 py-2 text-xs rounded-lg outline-none"><option>Starters</option><option>Main Course</option><option>Breads</option><option>Rice &amp; Biryani</option><option>Desserts</option><option>Beverages</option></select></div>
+              <div><label class="block text-[11px] font-bold mb-0.5" style="color:var(--text-muted);">Full Price (₹) *</label><input type="number" id="mItemFullPrice" class="gourmet-input w-full px-3 py-2 text-xs rounded-lg outline-none"><p class="text-[10px] text-rose-500 font-bold mt-0.5 hidden field-err-msg">Required.</p></div>
+              <div><label class="block text-[11px] font-bold mb-0.5" style="color:var(--text-muted);">Half Price (₹) *</label><input type="number" id="mItemHalfPrice" class="gourmet-input w-full px-3 py-2 text-xs rounded-lg outline-none" value="0"><p class="text-[10px] text-rose-500 font-bold mt-0.5 hidden field-err-msg">Required.</p></div>
+              <div><label class="block text-[11px] font-bold mb-0.5" style="color:var(--text-muted);">Status</label><select id="mItemStatus" class="gourmet-input w-full px-3 py-2 text-xs rounded-lg outline-none"><option value="Available">Available</option><option value="Sold Out">Sold Out</option></select></div>
+              <div><label class="block text-[11px] font-bold mb-0.5" style="color:var(--text-muted);">Image URL</label><input type="text" id="mItemImg" class="gourmet-input w-full px-3 py-2 text-xs rounded-lg outline-none" placeholder="Optional"></div>
+              <button onclick="validateAndCommitMenu()" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 rounded-lg text-xs transition shadow mt-2">Add Item</button>
+            </div>
+          </div>
+          <div class="xl:col-span-2 gourmet-panel rounded-xl p-4 shadow-sm overflow-x-auto">
+            <table class="w-full text-left text-xs border-collapse">
+              <thead><tr class="border-b" style="border-color:var(--border-color);color:var(--text-muted);"><th class="py-2">Item</th><th class="py-2">Category</th><th class="py-2">Full</th><th class="py-2">Half</th><th class="py-2">Status</th><th class="py-2 text-right">Del</th></tr></thead>
+              <tbody id="menuAdminTbody" class="divide-y" style="border-color:var(--border-color);"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- STAFF -->
+      <div id="view-staff" class="view-container">
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-5">
+          <div class="gourmet-panel rounded-xl p-5 shadow-sm h-fit">
+            <h3 class="text-sm font-black mb-4">Onboard Staff</h3>
+            <div class="space-y-3" id="frmStaffBlock">
+              <div><label class="block text-[11px] font-bold mb-0.5" style="color:var(--text-muted);">Full Name *</label><input type="text" id="sEmpName" class="gourmet-input w-full px-3 py-2 text-xs rounded-lg outline-none"><p class="text-[10px] text-rose-500 font-bold mt-0.5 hidden field-err-msg">Required.</p></div>
+              <div><label class="block text-[11px] font-bold mb-0.5" style="color:var(--text-muted);">Mobile *</label><input type="text" id="sEmpMobile" class="gourmet-input w-full px-3 py-2 text-xs rounded-lg outline-none"><p class="text-[10px] text-rose-500 font-bold mt-0.5 hidden field-err-msg">Required.</p></div>
+              <div><label class="block text-[11px] font-bold mb-0.5" style="color:var(--text-muted);">Email *</label><input type="email" id="sEmpEmail" class="gourmet-input w-full px-3 py-2 text-xs rounded-lg outline-none"><p class="text-[10px] text-rose-500 font-bold mt-0.5 hidden field-err-msg">Required.</p></div>
+              <div><label class="block text-[11px] font-bold mb-0.5" style="color:var(--text-muted);">Aadhaar Ref *</label><input type="text" id="sEmpAadhar" class="gourmet-input w-full px-3 py-2 text-xs rounded-lg outline-none"><p class="text-[10px] text-rose-500 font-bold mt-0.5 hidden field-err-msg">Required.</p></div>
+              <div><label class="block text-[11px] font-bold mb-0.5" style="color:var(--text-muted);">Login Username *</label><input type="text" id="sEmpLogin" class="gourmet-input w-full px-3 py-2 text-xs rounded-lg outline-none"><p class="text-[10px] text-rose-500 font-bold mt-0.5 hidden field-err-msg">Required.</p></div>
+              <div><label class="block text-[11px] font-bold mb-0.5" style="color:var(--text-muted);">Password *</label><input type="password" id="sEmpPassword" class="gourmet-input w-full px-3 py-2 text-xs rounded-lg outline-none"><p class="text-[10px] text-rose-500 font-bold mt-0.5 hidden field-err-msg">Required.</p></div>
+              <div><label class="block text-[11px] font-bold mb-0.5" style="color:var(--text-muted);">Role</label><select id="sEmpRole" class="gourmet-input w-full px-3 py-2 text-xs rounded-lg outline-none"><option value="Admin">Admin</option><option value="Cashier">Cashier</option></select></div>
+              <div><label class="block text-[11px] font-bold mb-0.5" style="color:var(--text-muted);">Status</label><select id="sEmpStatus" class="gourmet-input w-full px-3 py-2 text-xs rounded-lg outline-none"><option value="Active">Active</option><option value="Suspended">Suspended</option></select></div>
+              <div><label class="block text-[11px] font-bold mb-0.5" style="color:var(--text-muted);">Avatar URL</label><input type="text" id="sEmpImg" class="gourmet-input w-full px-3 py-2 text-xs rounded-lg outline-none" placeholder="Optional"></div>
+              <button onclick="validateAndCommitStaff()" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 rounded-lg text-xs transition shadow mt-2">Register Employee</button>
+            </div>
+          </div>
+          <div class="xl:col-span-2 gourmet-panel rounded-xl p-4 shadow-sm overflow-x-auto flex flex-col lg:flex-row gap-4">
+            <div class="flex-1">
+              <table class="w-full text-left text-xs border-collapse">
+                <thead><tr class="border-b" style="border-color:var(--border-color);color:var(--text-muted);"><th class="py-2">Name</th><th class="py-2">Role</th><th class="py-2">Status</th><th class="py-2 text-right">Action</th></tr></thead>
+                <tbody id="staffAdminTbody" class="divide-y" style="border-color:var(--border-color);"></tbody>
+              </table>
+            </div>
+            <div id="staffFocusPanel" class="w-full lg:w-56 border-t lg:border-t-0 lg:border-l pt-4 lg:pt-0 lg:pl-4 hidden" style="border-color:var(--border-color);">
+              <div class="text-center pb-3 border-b mb-3" style="border-color:var(--border-color);">
+                <img id="focusStaffImg" src="" class="w-14 h-14 rounded-full mx-auto object-cover border bg-slate-100 shadow-sm" style="border-color:var(--border-color);">
+                <h4 id="focusStaffName" class="text-xs font-black mt-2"></h4>
+                <p id="focusStaffRole" class="text-[10px] text-orange-500 font-bold uppercase mt-0.5"></p>
+              </div>
+              <div class="space-y-2 text-[11px] font-semibold">
+                <p style="color:var(--text-muted);">Phone: <span id="focusStaffPhone" class="block font-mono text-xs" style="color:var(--text-main);"></span></p>
+                <p style="color:var(--text-muted);">Email: <span id="focusStaffEmail" class="block text-xs" style="color:var(--text-main);"></span></p>
+                <p style="color:var(--text-muted);">Aadhaar: <span id="focusStaffAadhar" class="block font-mono text-xs" style="color:var(--text-main);"></span></p>
+              </div>
+              <button id="focusStaffTrackBtn" class="w-full mt-4 bg-slate-800 hover:bg-slate-900 text-white font-bold py-2 rounded-lg text-[10px] transition"><i class="fas fa-chart-line mr-1.5"></i>View Performance</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DAILY REPORTS -->
+      <div id="view-reports" class="view-container">
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-5">
+          <div class="xl:col-span-2 space-y-4">
+            <div class="gourmet-panel rounded-xl p-5 shadow-sm">
+              <div class="flex items-center justify-between mb-4">
+                <div><h3 class="text-sm font-black">Daily Sales Report</h3><p id="rptDate" class="text-[10px] font-bold mt-0.5" style="color:var(--text-muted);"></p></div>
+                <button onclick="syncDailyReport()" class="text-xs font-bold text-orange-600 hover:underline"><i class="fas fa-sync-alt mr-1"></i>Refresh</button>
+              </div>
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+                <div class="p-3 rounded-lg text-center" style="background:var(--border-color);"><p class="text-[10px] font-bold" style="color:var(--text-muted);">Revenue</p><p id="rptTotalSales" class="text-base font-black mt-1">₹0.00</p></div>
+                <div class="p-3 rounded-lg text-center" style="background:var(--border-color);"><p class="text-[10px] font-bold" style="color:var(--text-muted);">Orders</p><p id="rptTotalOrders" class="text-base font-black mt-1">0</p></div>
+                <div class="p-3 rounded-lg text-center" style="background:var(--border-color);"><p class="text-[10px] font-bold" style="color:var(--text-muted);">Avg Value</p><p id="rptAvgOrder" class="text-base font-black mt-1">₹0.00</p></div>
+                <div class="p-3 rounded-lg text-center" style="background:var(--border-color);"><p class="text-[10px] font-bold" style="color:var(--text-muted);">Discounts</p><p id="rptDiscount" class="text-base font-black mt-1" style="color:#d97706;">₹0.00</p></div>
+              </div>
+              <div class="grid grid-cols-3 gap-3 text-center">
+                <div class="p-2 rounded-lg" style="background:var(--border-color);"><p class="text-[10px] font-bold" style="color:var(--text-muted);">Cash</p><p id="rptCash" class="text-sm font-black mt-0.5">₹0.00</p></div>
+                <div class="p-2 rounded-lg" style="background:var(--border-color);"><p class="text-[10px] font-bold" style="color:var(--text-muted);">UPI</p><p id="rptUpi" class="text-sm font-black mt-0.5">₹0.00</p></div>
+                <div class="p-2 rounded-lg" style="background:var(--border-color);"><p class="text-[10px] font-bold" style="color:var(--text-muted);">Card</p><p id="rptCard" class="text-sm font-black mt-0.5">₹0.00</p></div>
+              </div>
+            </div>
+            <div class="gourmet-panel rounded-xl p-5 shadow-sm">
+              <h3 class="text-sm font-black mb-3">Today's Top Selling Items</h3>
+              <table class="w-full text-xs border-collapse">
+                <thead><tr class="border-b" style="border-color:var(--border-color);color:var(--text-muted);"><th class="py-1.5 px-2 text-left font-bold">#</th><th class="py-1.5 px-2 text-left font-bold">Item</th><th class="py-1.5 px-2 text-center font-bold">Qty Sold</th><th class="py-1.5 px-2 text-right font-bold">Revenue</th></tr></thead>
+                <tbody id="rptTopItems" class="divide-y" style="border-color:var(--border-color);"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="gourmet-panel rounded-xl p-5 shadow-sm h-fit">
+            <h3 class="text-sm font-black mb-3">Email Report to Owner</h3>
+            <p class="text-[11px] mb-3" style="color:var(--text-muted);">Send today's summary directly to the owner's inbox.</p>
+            <input type="email" id="rptEmailInput" placeholder="owner@example.com" class="gourmet-input w-full px-3 py-2 text-xs rounded-lg outline-none mb-3">
+            <button onclick="emailDailyReport()" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 rounded-lg text-xs transition shadow">Send Report Email</button>
+            <div class="mt-4 p-3 rounded-lg text-[10px] space-y-1" style="background:var(--border-color);color:var(--text-muted);">
+              <p class="font-black mb-1">Report includes:</p>
+              <p>• Total revenue &amp; order count</p>
+              <p>• Payment channel breakdown</p>
+              <p>• Top 5 selling items</p>
+              <p>• Total discounts given</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- RECEIPT MODAL -->
+  <div id="receiptModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" style="display:none;">
+    <div class="gourmet-panel max-w-sm w-full rounded-2xl shadow-2xl p-5 bg-white text-slate-900">
+      <div id="receiptContent" class="bg-white p-4 text-slate-900 rounded-xl font-mono text-[11px] border leading-relaxed">
+        <div class="text-center border-b border-dashed pb-3 mb-3 border-slate-300">
+          <h2 class="text-base font-black tracking-tight text-slate-900">Orderly</h2>
+          <p class="text-[10px] text-slate-500 mt-0.5">Premium Dining System</p>
+          <p class="text-[10px] font-bold mt-1 text-slate-700" id="recGstinLabel"></p>
+          <p class="text-[9px] text-slate-400 mt-0.5" id="recTimeLabel"></p>
+        </div>
+        <div class="space-y-1 mb-3 text-[10px]">
+          <p><strong>Invoice:</strong> <span id="recInvoiceNum"></span></p>
+          <p><strong>Cashier:</strong> <span id="recCashierNum"></span></p>
+          <p><strong>Customer:</strong> <span id="recClientName"></span></p>
+        </div>
+        <table class="w-full border-b border-dashed pb-2 mb-2 border-slate-300 text-[10px]">
+          <thead><tr class="text-slate-500 border-b border-slate-100"><th class="text-left py-1">Item</th><th class="text-center py-1">Qty</th><th class="text-right py-1">Total</th></tr></thead>
+          <tbody id="recItems" class="divide-y text-slate-800 border-slate-100"></tbody>
+        </table>
+        <div class="space-y-1 text-right text-[10px] border-b border-dashed pb-3 mb-3 border-slate-300">
+          <p>Subtotal: <span id="recSub" class="font-bold">₹0.00</span></p>
+          <p style="color:#d97706;">Discount: <span id="recDiscountLine" class="font-bold">₹0.00</span></p>
+          <p>CGST+SGST (5%): <span id="recTax" class="font-bold">₹0.00</span></p>
+          <p class="text-xs font-black text-slate-900">Total Paid: <span id="recTotal">₹0.00</span></p>
+        </div>
+        <p class="text-center text-[10px] text-slate-500 font-bold">Thank you for visiting us!</p>
+      </div>
+      <div class="grid grid-cols-2 gap-2 mt-4">
+        <button onclick="printReceiptWindow()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-2 rounded-xl text-xs transition flex items-center justify-center shadow"><i class="fas fa-print mr-2"></i>Print Bill</button>
+        <button onclick="closeReceiptModal()" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 rounded-xl text-xs transition shadow">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLE OPTIONS MODAL -->
+  <div id="tableModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" style="display:none;" onclick="if(event.target===this)closeModal('tableModal')">
+    <div class="gourmet-panel max-w-xs w-full rounded-2xl shadow-2xl p-5">
+      <h3 class="text-sm font-black mb-3">Table Options</h3>
+      <div id="tableModalBody"></div>
+    </div>
+  </div>
+
+  <!-- DARK MODE TOGGLE -->
+  <div onclick="toggleDarkTheme()" class="fixed bottom-6 right-6 z-50 bg-slate-800 text-white w-11 h-11 rounded-full flex items-center justify-center shadow-2xl cursor-pointer hover:scale-105 transition-transform">
+    <i class="fas fa-moon text-sm" id="themeIcon"></i>
+  </div>
+
+  <script src="app.js" charset="UTF-8"></script>
+  </body>
+</html>

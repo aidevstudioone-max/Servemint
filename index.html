@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orderly — Restaurant Point of Sale</title>
+<meta name="description" content="Orderly is a restaurant point-of-sale system — billing, tables, reservations, inventory, staff, and daily reports in one place. Try the live demo.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<svg style="display:none">
+  <symbol id="icon-register" viewBox="0 0 24 24"><rect x="3" y="9" width="18" height="11" rx="2"/><path d="M7 9V6a5 5 0 0 1 10 0v3M9 14h6"/></symbol>
+  <symbol id="icon-table" viewBox="0 0 24 24"><rect x="3" y="9" width="18" height="3"/><path d="M6 12v7M18 12v7"/></symbol>
+  <symbol id="icon-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></symbol>
+  <symbol id="icon-book" viewBox="0 0 24 24"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v18H6.5A2.5 2.5 0 0 1 4 17.5v-13z"/><path d="M4 17.5A2.5 2.5 0 0 1 6.5 15H20"/></symbol>
+  <symbol id="icon-boxes" viewBox="0 0 24 24"><path d="M12 2 3 7l9 5 9-5-9-5z"/><path d="M3 7v10l9 5 9-5V7M12 12v10"/></symbol>
+  <symbol id="icon-chart" viewBox="0 0 24 24"><path d="M4 20V10M12 20V4M20 20v-7"/></symbol>
+  <symbol id="icon-check" viewBox="0 0 24 24"><path d="M4 12.5l5.5 5.5L20 6"/></symbol>
+  <symbol id="icon-key" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4.5"/><path d="M11.2 11.8 20 3M16.5 7.5l3 3M13.5 10.5l2.4 2.4"/></symbol>
+  <symbol id="icon-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+</svg>
+
+<div id="toast"></div>
+
+<header class="navbar" id="navbar">
+  <div class="wrap">
+    <a href="#top" class="brand"><span class="brand-mark">O</span> Orderly</a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#features">Features</a>
+      <a href="#preview">Preview</a>
+      <a href="#pricing">Pricing</a>
+      <a href="app.html" class="btn btn-primary btn-sm">Try Live Demo</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu"><svg class="icon"><use href="#icon-menu"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<section class="hero" id="top">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="eyebrow"><svg class="icon"><use href="#icon-register"/></svg> Restaurant Point of Sale</span>
+      <h1>Billing, tables, and reports — <em>running the floor.</em></h1>
+      <p class="hero-sub">Orderly is a complete restaurant POS — instant billing, live table status, reservations, inventory, and daily sales reports, all in one clean dashboard your staff will actually enjoy using.</p>
+      <div class="hero-ctas">
+        <a href="app.html" class="btn btn-primary">Try Live Demo <svg class="icon"><use href="#icon-key"/></svg></a>
+        <a href="#features" class="btn btn-outline">See Features</a>
+      </div>
+      <div class="hero-stats">
+        <span class="stat"><svg class="icon"><use href="#icon-register"/></svg> Full POS &amp; billing</span>
+        <span class="stat"><svg class="icon"><use href="#icon-table"/></svg> Live table status</span>
+        <span class="stat"><svg class="icon"><use href="#icon-chart"/></svg> Daily sales reports</span>
+      </div>
+    </div>
+    <div class="reveal">
+      <div class="receipt-card">
+        <div class="receipt-head">
+          <strong>Orderly</strong>
+          <span>GSTIN: 27ORDLY0001Z1 &nbsp;·&nbsp; Invoice INV-1002</span>
+        </div>
+        <div class="receipt-row"><span>Chicken Biryani ×2</span><span>₹600.00</span></div>
+        <div class="receipt-row"><span>Masala Chai ×2</span><span>₹60.00</span></div>
+        <div class="receipt-row"><span>Discount (10%)</span><span>-₹66.00</span></div>
+        <div class="receipt-row"><span>CGST+SGST 5%</span><span>₹29.70</span></div>
+        <div class="receipt-total"><span>Total Paid</span><span>₹623.70</span></div>
+        <span class="receipt-badge"><svg class="icon"><use href="#icon-check"/></svg> Paid via UPI</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="features">
+  <div class="wrap">
+    <div class="section-heading reveal">
+      <span class="eyebrow">Features</span>
+      <h2>Everything the front of house needs.</h2>
+      <p>Built around a real dinner-rush workflow — fast billing, clear table status, and numbers that make sense the next morning.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card reveal">
+        <div class="feature-icon"><svg class="icon"><use href="#icon-register"/></svg></div>
+        <h3>Fast POS billing</h3>
+        <p>Tap to add items, apply discounts, split half/full portions, and check out in seconds.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon"><svg class="icon"><use href="#icon-table"/></svg></div>
+        <h3>Live table status</h3>
+        <p>See every table's Free / Occupied / Reserved status on one floor plan, updated instantly.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon"><svg class="icon"><use href="#icon-calendar"/></svg></div>
+        <h3>Reservations</h3>
+        <p>Take bookings, assign tables ahead of time, and never double-book a party again.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon"><svg class="icon"><use href="#icon-chart"/></svg></div>
+        <h3>Dashboard &amp; daily reports</h3>
+        <p>Revenue, bill count, payment mix, and top-selling items — updated the moment an order lands.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon"><svg class="icon"><use href="#icon-boxes"/></svg></div>
+        <h3>Inventory &amp; staff</h3>
+        <p>Track stock levels with low-stock alerts, and manage staff accounts with role-based access.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon"><svg class="icon"><use href="#icon-book"/></svg></div>
+        <h3>Ledger &amp; customer history</h3>
+        <p>Every transaction and every regular customer, searchable in one place.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt" id="preview">
+  <div class="wrap">
+    <div class="section-heading reveal">
+      <span class="eyebrow">Live Preview</span>
+      <h2>This isn't a mockup. It's the actual app.</h2>
+      <p>What you see below is Orderly running live — log in with the demo credentials and try the full thing yourself.</p>
+    </div>
+    <div class="reveal">
+      <div class="browser-frame">
+        <div class="browser-bar">
+          <div class="browser-dots"><span></span><span></span><span></span></div>
+          <div class="browser-url">orderly.app/dashboard</div>
+        </div>
+        <div class="browser-viewport">
+          <iframe src="app.html" title="Orderly live preview" loading="lazy" tabindex="-1" aria-hidden="true"></iframe>
+        </div>
+      </div>
+      <div class="preview-cta">
+        <a href="app.html" class="btn btn-primary">Open Full Demo <svg class="icon"><use href="#icon-key"/></svg></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="pricing">
+  <div class="wrap">
+    <div class="section-heading reveal">
+      <span class="eyebrow">Pricing</span>
+      <h2>Simple pricing, built for real restaurants.</h2>
+      <p>Every plan includes the full POS, dashboard, and staff accounts.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="price-card reveal">
+        <h3>Single Counter</h3>
+        <div class="price">₹1,999<small> /mo</small></div>
+        <p class="price-desc">For a single till and a small menu.</p>
+        <ul class="price-list">
+          <li>1 billing counter</li>
+          <li>Tables &amp; reservations</li>
+          <li>Daily sales reports</li>
+          <li>Email support</li>
+        </ul>
+        <a href="app.html" class="btn btn-outline btn-block">Try Live Demo</a>
+      </div>
+      <div class="price-card featured reveal">
+        <span class="price-badge">Most Popular</span>
+        <h3>Full Restaurant</h3>
+        <div class="price">₹4,499<small> /mo</small></div>
+        <p class="price-desc">For a full-service restaurant with a team.</p>
+        <ul class="price-list">
+          <li>Up to 4 billing counters</li>
+          <li>Everything in Single Counter</li>
+          <li>Inventory &amp; staff management</li>
+          <li>Priority support</li>
+        </ul>
+        <a href="app.html" class="btn btn-primary btn-block">Try Live Demo</a>
+      </div>
+      <div class="price-card reveal">
+        <h3>Multi-Location</h3>
+        <div class="price">Custom</div>
+        <p class="price-desc">For restaurant groups and chains.</p>
+        <ul class="price-list">
+          <li>Unlimited counters &amp; locations</li>
+          <li>Everything in Full Restaurant</li>
+          <li>Consolidated reporting</li>
+          <li>Dedicated onboarding</li>
+        </ul>
+        <a href="app.html" class="btn btn-outline btn-block">Talk to Us</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="cta-banner reveal">
+    <h2>Ready to see Orderly in action?</h2>
+    <p>No sign-up, no setup — log in with the demo account and try the full thing.</p>
+    <a href="app.html" class="btn btn-primary">Try Live Demo <svg class="icon"><use href="#icon-key"/></svg></a>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#top" class="brand"><span class="brand-mark">O</span> Orderly</a>
+        <p>Restaurant point of sale, built for real dinner rushes.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Explore</h4>
+        <a href="#features">Features</a>
+        <a href="#preview">Live Preview</a>
+        <a href="#pricing">Pricing</a>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="app.html">Try the Demo</a>
+        <a href="app.html#view-reports">Reports</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <a href="#">hello@orderly.app</a>
+        <a href="#">Request a Callback</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Orderly.</span>
+      <span>Demo product — all data is stored locally in your browser, no real orders are processed.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
