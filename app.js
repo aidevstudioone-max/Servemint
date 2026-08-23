@@ -6,7 +6,7 @@ let globalTables = [];
 let activeDiscount = { type: 'none', value: 0 };
 
 // ================= MOCK BACKEND (localStorage-based demo data layer) =================
-// Everything below simulates the real Orderly API so every screen works with
+// Everything below simulates the real Servemint API so every screen works with
 // zero server — same function names/shapes the UI already expects.
 
 const DEMO_USER = { username: 'admin', password: 'admin123', empCode: 'EMP0001', role: 'Admin' };
@@ -35,7 +35,7 @@ function mkSeedOrder(invoice, date, customer, mobile, email, method, cashier, it
 }
 
 function seedMockDataIfEmpty() {
-  if (localStorage.getItem('orderly_menu') !== null) return;
+  if (localStorage.getItem('servemint_menu') !== null) return;
 
   const menu = [
     { id: 'MI0001', name: 'Paneer Tikka', category: 'Starters', fullPrice: 220, halfPrice: 130, status: 'Available', imgUrl: '' },
@@ -51,10 +51,10 @@ function seedMockDataIfEmpty() {
     { id: 'MI0011', name: 'Masala Chai', category: 'Beverages', fullPrice: 30, halfPrice: 0, status: 'Available', imgUrl: '' },
     { id: 'MI0012', name: 'Fresh Lime Soda', category: 'Beverages', fullPrice: 60, halfPrice: 0, status: 'Available', imgUrl: '' },
   ];
-  saveDB('orderly_menu', menu);
+  saveDB('servemint_menu', menu);
   function item(name) { return menu.find(function (m) { return m.name === name; }); }
 
-  saveDB('orderly_tables', [
+  saveDB('servemint_tables', [
     { id: 'T01', number: 1, name: 'Table 1', capacity: 2, status: 'Free' },
     { id: 'T02', number: 2, name: 'Table 2', capacity: 2, status: 'Occupied' },
     { id: 'T03', number: 3, name: 'Table 3', capacity: 4, status: 'Free' },
@@ -65,9 +65,9 @@ function seedMockDataIfEmpty() {
     { id: 'T08', number: 8, name: 'Garden B', capacity: 2, status: 'Free' },
   ]);
 
-  saveDB('orderly_employees', [
-    { code: 'EMP0001', name: 'Administrator', mobile: '9000000001', email: 'admin@orderly.local', aadhar: '', role: 'Admin', status: 'Active', imgUrl: '' },
-    { code: 'EMP0002', name: 'Rahul Singh', mobile: '9000000002', email: 'rahul.singh@orderly.local', aadhar: '', role: 'Cashier', status: 'Active', imgUrl: '' },
+  saveDB('servemint_employees', [
+    { code: 'EMP0001', name: 'Administrator', mobile: '9000000001', email: 'admin@servemint.local', aadhar: '', role: 'Admin', status: 'Active', imgUrl: '' },
+    { code: 'EMP0002', name: 'Rahul Singh', mobile: '9000000002', email: 'rahul.singh@servemint.local', aadhar: '', role: 'Cashier', status: 'Active', imgUrl: '' },
   ]);
 
   const orders = [
@@ -101,15 +101,15 @@ function seedMockDataIfEmpty() {
       { name: 'Tandoori Roti', portion: 'Full', quantity: 2, unitPrice: item('Tandoori Roti').fullPrice },
     ]),
   ];
-  saveDB('orderly_orders', orders);
+  saveDB('servemint_orders', orders);
 
-  saveDB('orderly_inventory', menu.map(function (m, i) {
+  saveDB('servemint_inventory', menu.map(function (m, i) {
     const stockLevels = [40, 35, 18, 22, 30, 8, 6, 25, 20, 45, 60, 50];
     const thresholds = [15, 15, 10, 10, 12, 10, 10, 10, 10, 15, 20, 20];
     return { id: m.id, name: m.name, category: m.category, stock: stockLevels[i], threshold: thresholds[i], unit: 'pcs' };
   }));
 
-  saveDB('orderly_reservations', [
+  saveDB('servemint_reservations', [
     { id: 'RES001', customerName: 'Kavya Reddy', mobile: '9765432109', date: demoDaysOffset(1), time: '19:30', partySize: 4, tableId: 'T04', status: 'Confirmed', notes: 'Window seat if possible' },
     { id: 'RES002', customerName: 'Arjun Rao', mobile: '9654321098', date: demoDaysOffset(2), time: '20:00', partySize: 2, tableId: '', status: 'Confirmed', notes: '' },
     { id: 'RES003', customerName: 'Meera Iyer', mobile: '9543210987', date: demoTodayISO(), time: '21:00', partySize: 6, tableId: 'T06', status: 'Confirmed', notes: 'Birthday celebration' },
@@ -139,28 +139,28 @@ function mockApiRouter(method, path, body) {
   }
 
   if (method === 'GET' && path === '/api/dashboard/metrics') {
-    return computeMetrics(loadDB('orderly_orders', []).filter(function (o) { return o.date === demoTodayISO(); }));
+    return computeMetrics(loadDB('servemint_orders', []).filter(function (o) { return o.date === demoTodayISO(); }));
   }
 
-  if (method === 'GET' && path === '/api/menu') return loadDB('orderly_menu', []);
+  if (method === 'GET' && path === '/api/menu') return loadDB('servemint_menu', []);
   if (method === 'POST' && path === '/api/menu') {
-    const menu = loadDB('orderly_menu', []);
+    const menu = loadDB('servemint_menu', []);
     const id = 'MI' + String(menu.length + 1).padStart(4, '0');
     menu.push(Object.assign({ id: id }, body));
-    saveDB('orderly_menu', menu);
+    saveDB('servemint_menu', menu);
     return { success: true };
   }
   let m = path.match(/^\/api\/menu\/(.+)$/);
   if (method === 'DELETE' && m) {
-    saveDB('orderly_menu', loadDB('orderly_menu', []).filter(function (row) { return row.id !== m[1]; }));
+    saveDB('servemint_menu', loadDB('servemint_menu', []).filter(function (row) { return row.id !== m[1]; }));
     return { success: true };
   }
 
   if (method === 'GET' && path === '/api/orders') {
-    return loadDB('orderly_orders', []).slice().sort(function (a, b) { return a.invoice < b.invoice ? 1 : -1; });
+    return loadDB('servemint_orders', []).slice().sort(function (a, b) { return a.invoice < b.invoice ? 1 : -1; });
   }
   if (method === 'POST' && path === '/api/orders') {
-    const orders = loadDB('orderly_orders', []);
+    const orders = loadDB('servemint_orders', []);
     const invoiceNumber = 'INV-' + (2000 + orders.length + Math.floor(Math.random() * 500));
     const order = {
       invoice: invoiceNumber, date: demoTodayISO(), customer: body.customerName || 'Walk-In Customer',
@@ -169,39 +169,39 @@ function mockApiRouter(method, path, body) {
       cashier: localStorage.getItem('sessionEmpCode') || 'EMP0001', items: body.items
     };
     orders.push(order);
-    saveDB('orderly_orders', orders);
-    return { success: true, invoiceNumber: invoiceNumber, gstin: '27ORDLY0001Z1', date: order.date, totalAmount: body.totalAmount };
+    saveDB('servemint_orders', orders);
+    return { success: true, invoiceNumber: invoiceNumber, gstin: '27SRVMT0001Z1', date: order.date, totalAmount: body.totalAmount };
   }
 
-  if (method === 'GET' && path === '/api/tables') return loadDB('orderly_tables', []);
+  if (method === 'GET' && path === '/api/tables') return loadDB('servemint_tables', []);
   if (method === 'POST' && path === '/api/tables') {
-    const tables = loadDB('orderly_tables', []);
+    const tables = loadDB('servemint_tables', []);
     const num = tables.length + 1;
     tables.push({ id: 'T' + String(num).padStart(2, '0') + '-' + Date.now().toString().slice(-4), number: num, name: body.name, capacity: body.capacity, status: 'Free' });
-    saveDB('orderly_tables', tables);
+    saveDB('servemint_tables', tables);
     return { success: true };
   }
   m = path.match(/^\/api\/tables\/(.+)\/status$/);
   if (method === 'PATCH' && m) {
-    const tables = loadDB('orderly_tables', []);
+    const tables = loadDB('servemint_tables', []);
     const t = tables.find(function (row) { return row.id === m[1]; });
     if (t) t.status = body.status;
-    saveDB('orderly_tables', tables);
+    saveDB('servemint_tables', tables);
     return { success: true };
   }
 
   if (method === 'GET' && path === '/api/reservations') {
-    return loadDB('orderly_reservations', []).slice().sort(function (a, b) { return a.date < b.date ? -1 : 1; });
+    return loadDB('servemint_reservations', []).slice().sort(function (a, b) { return a.date < b.date ? -1 : 1; });
   }
   if (method === 'POST' && path === '/api/reservations') {
-    const list = loadDB('orderly_reservations', []);
+    const list = loadDB('servemint_reservations', []);
     list.push(Object.assign({ id: 'RES' + String(list.length + 1).padStart(3, '0') }, body));
-    saveDB('orderly_reservations', list);
+    saveDB('servemint_reservations', list);
     return { success: true };
   }
 
   if (method === 'GET' && path === '/api/reports/daily') {
-    const todays = loadDB('orderly_orders', []).filter(function (o) { return o.date === demoTodayISO(); });
+    const todays = loadDB('servemint_orders', []).filter(function (o) { return o.date === demoTodayISO(); });
     const metrics = computeMetrics(todays);
     const itemMap = {};
     todays.forEach(function (o) {
@@ -219,41 +219,41 @@ function mockApiRouter(method, path, body) {
     return { success: true };
   }
 
-  if (method === 'GET' && path === '/api/inventory') return loadDB('orderly_inventory', []);
+  if (method === 'GET' && path === '/api/inventory') return loadDB('servemint_inventory', []);
   m = path.match(/^\/api\/inventory\/(.+)$/);
   if (method === 'PATCH' && m) {
-    const inv = loadDB('orderly_inventory', []);
+    const inv = loadDB('servemint_inventory', []);
     const row = inv.find(function (r) { return r.id === m[1]; });
     if (!row) return { success: false, message: 'Item not found in inventory.' };
     if (body.op === 'add') row.stock += body.qty;
     else if (body.op === 'subtract') row.stock = Math.max(0, row.stock - body.qty);
     else row.stock = body.qty;
-    saveDB('orderly_inventory', inv);
+    saveDB('servemint_inventory', inv);
     return { success: true };
   }
 
-  if (method === 'GET' && path === '/api/employees') return loadDB('orderly_employees', []);
+  if (method === 'GET' && path === '/api/employees') return loadDB('servemint_employees', []);
   if (method === 'POST' && path === '/api/employees') {
-    const emps = loadDB('orderly_employees', []);
+    const emps = loadDB('servemint_employees', []);
     const code = 'EMP' + String(emps.length + 1).padStart(4, '0');
     emps.push({ code: code, name: body.name, mobile: body.mobile, email: body.email, aadhar: body.aadhar, role: body.role, status: body.status, imgUrl: body.imgUrl });
-    saveDB('orderly_employees', emps);
+    saveDB('servemint_employees', emps);
     return { success: true };
   }
   m = path.match(/^\/api\/employees\/([^\/]+)\/performance$/);
   if (method === 'GET' && m) {
-    const empOrders = loadDB('orderly_orders', []).filter(function (o) { return o.cashier === m[1]; });
+    const empOrders = loadDB('servemint_orders', []).filter(function (o) { return o.cashier === m[1]; });
     const totalSales = empOrders.reduce(function (s, o) { return s + o.amount; }, 0);
     return { totalSales: totalSales, totalOrders: empOrders.length, peakHour: empOrders.length ? '7:00 PM – 9:00 PM' : 'No data yet' };
   }
   m = path.match(/^\/api\/employees\/([^\/]+)$/);
   if (method === 'DELETE' && m) {
-    saveDB('orderly_employees', loadDB('orderly_employees', []).filter(function (e) { return e.code !== m[1]; }));
+    saveDB('servemint_employees', loadDB('servemint_employees', []).filter(function (e) { return e.code !== m[1]; }));
     return { success: true };
   }
 
   if (method === 'GET' && path === '/api/customers') {
-    const orders = loadDB('orderly_orders', []);
+    const orders = loadDB('servemint_orders', []);
     const seen = {};
     const list = [];
     orders.forEach(function (o) {
@@ -528,6 +528,7 @@ function commitActiveOrder() {
   var tax = discounted * 0.05;
   var totalAmount = parseFloat((discounted + tax).toFixed(2));
 
+  var paymentMethod = document.getElementById('cartPaymentMethod').value;
   var orderPayload = {
     customerName: document.getElementById('cartCustName').value.trim(),
     customerMobile: document.getElementById('cartCustMobile').value.trim(),
@@ -536,10 +537,18 @@ function commitActiveOrder() {
     items: globalActiveCart,
     totalAmount: totalAmount,
     discountAmount: parseFloat(discountAmount.toFixed(2)),
-    paymentMethod: document.getElementById('cartPaymentMethod').value,
+    paymentMethod: paymentMethod,
     tableId: tableId
   };
 
+  if (paymentMethod === 'CASH') {
+    finalizeCheckout(orderPayload, tableId);
+  } else {
+    openPaymentGateway(orderPayload, tableId);
+  }
+}
+
+function finalizeCheckout(orderPayload, tableId) {
   var btn = document.getElementById('checkoutBtn');
   btn.disabled = true; btn.innerText = "Processing...";
 
@@ -556,6 +565,115 @@ function commitActiveOrder() {
     btn.disabled = false; btn.innerText = "Checkout";
     showToast("Checkout failed: " + err.message, "error");
   });
+}
+
+// ─── PAYMENT GATEWAY ──────────────────────────────────────
+function openPaymentGateway(orderPayload, tableId) {
+  var method = orderPayload.paymentMethod;
+  var amountLabel = '₹' + orderPayload.totalAmount.toFixed(2);
+  var bodyHtml;
+
+  if (method === 'CARD') {
+    bodyHtml =
+      '<div class="text-center mb-4">' +
+        '<div class="w-11 h-11 brand-mark rounded-xl flex items-center justify-center text-white text-lg mx-auto mb-2"><i class="fas fa-credit-card"></i></div>' +
+        '<h3 class="text-sm font-black">Card Payment</h3>' +
+        '<p class="text-xs mt-0.5" style="color:var(--text-muted);">Amount due <b>' + amountLabel + '</b></p>' +
+      '</div>' +
+      '<div class="space-y-2.5">' +
+        '<div class="relative">' +
+          '<label class="block text-[10px] font-bold uppercase tracking-wider mb-1">Card Number</label>' +
+          '<input type="text" id="pgCardNumber" inputmode="numeric" maxlength="19" placeholder="1234 5678 9012 3456" class="gourmet-input w-full px-3 py-2 pr-16 text-xs rounded-lg outline-none">' +
+          '<span id="pgCardBrand" class="absolute right-2.5 top-[27px] text-[9px] font-black uppercase px-2 py-0.5 rounded transition" style="background:var(--border-color);opacity:0;">--</span>' +
+        '</div>' +
+        '<div><label class="block text-[10px] font-bold uppercase tracking-wider mb-1">Cardholder Name</label><input type="text" id="pgCardName" placeholder="As printed on card" class="gourmet-input w-full px-3 py-2 text-xs rounded-lg outline-none"></div>' +
+        '<div class="grid grid-cols-2 gap-2">' +
+          '<div><label class="block text-[10px] font-bold uppercase tracking-wider mb-1">Expiry</label><input type="text" id="pgCardExpiry" inputmode="numeric" maxlength="5" placeholder="MM/YY" class="gourmet-input w-full px-3 py-2 text-xs rounded-lg outline-none"></div>' +
+          '<div><label class="block text-[10px] font-bold uppercase tracking-wider mb-1">CVV</label><input type="password" id="pgCardCvv" inputmode="numeric" maxlength="3" placeholder="•••" class="gourmet-input w-full px-3 py-2 text-xs rounded-lg outline-none"></div>' +
+        '</div>' +
+      '</div>';
+  } else {
+    bodyHtml =
+      '<div class="text-center mb-4">' +
+        '<div class="w-11 h-11 brand-mark rounded-xl flex items-center justify-center text-white text-lg mx-auto mb-2"><i class="fas fa-mobile-alt"></i></div>' +
+        '<h3 class="text-sm font-black">UPI Payment</h3>' +
+        '<p class="text-xs mt-0.5" style="color:var(--text-muted);">Amount due <b>' + amountLabel + '</b></p>' +
+      '</div>' +
+      '<div class="space-y-2.5">' +
+        '<div><label class="block text-[10px] font-bold uppercase tracking-wider mb-1">Customer UPI ID</label><input type="text" id="pgUpiId" placeholder="customer@okhdfcbank" class="gourmet-input w-full px-3 py-2 text-xs rounded-lg outline-none"></div>' +
+        '<p class="text-[11px]" style="color:var(--text-muted);">A payment request for ' + amountLabel + ' will be sent to the customer&rsquo;s UPI app.</p>' +
+      '</div>';
+  }
+
+  document.getElementById('paymentGatewayBody').innerHTML =
+    '<div id="pgFormArea">' + bodyHtml + '</div>' +
+    '<div class="grid grid-cols-2 gap-2 mt-5">' +
+      '<button id="pgCancelBtn" class="w-full font-bold py-2 rounded-lg text-xs transition" style="background:var(--border-color);color:var(--text-main);border:none;cursor:pointer;">Cancel</button>' +
+      '<button id="pgPayBtn" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 rounded-lg text-xs transition shadow">' +
+        '<span id="pgPayBtnLabel">' + (method === 'CARD' ? 'Charge ' + amountLabel : 'Send Request') + '</span>' +
+      '</button>' +
+    '</div>' +
+    '<p id="pgStatusLine" class="text-center text-[11px] font-bold mt-2.5" style="color:var(--text-muted);"></p>' +
+    '<p class="text-center text-[10px] mt-1 flex items-center justify-center gap-1" style="color:var(--text-muted);"><i class="fas fa-lock"></i> 256-bit encrypted &middot; Secured by ServemintPay Gateway</p>';
+
+  document.getElementById('paymentGatewayModal').style.display = 'flex';
+  document.getElementById('pgCancelBtn').addEventListener('click', closePaymentGateway);
+
+  if (method === 'CARD') {
+    var numInput = document.getElementById('pgCardNumber');
+    var brandBadge = document.getElementById('pgCardBrand');
+    numInput.addEventListener('input', function() {
+      var digits = numInput.value.replace(/\D/g, '').slice(0, 16);
+      numInput.value = digits.replace(/(.{4})/g, '$1 ').trim();
+      var brand = digits.startsWith('4') ? 'Visa' : digits.startsWith('5') ? 'Mastercard' : digits.startsWith('6') ? 'RuPay' : digits.startsWith('3') ? 'Amex' : '';
+      brandBadge.innerText = brand || '--';
+      brandBadge.style.opacity = brand ? '1' : '0';
+    });
+    var expInput = document.getElementById('pgCardExpiry');
+    expInput.addEventListener('input', function() {
+      var digits = expInput.value.replace(/\D/g, '').slice(0, 4);
+      expInput.value = digits.length > 2 ? digits.slice(0, 2) + '/' + digits.slice(2) : digits;
+    });
+    document.getElementById('pgCardCvv').addEventListener('input', function(e) {
+      e.target.value = e.target.value.replace(/\D/g, '').slice(0, 3);
+    });
+  }
+
+  document.getElementById('pgPayBtn').addEventListener('click', function() {
+    if (method === 'CARD') {
+      var num = document.getElementById('pgCardNumber').value.replace(/\s/g, '');
+      var expiry = document.getElementById('pgCardExpiry').value;
+      var cvv = document.getElementById('pgCardCvv').value;
+      var name = document.getElementById('pgCardName').value.trim();
+      if (num.length !== 16 || !/^\d{2}\/\d{2}$/.test(expiry) || cvv.length !== 3 || !name) {
+        showToast('Please enter valid card details', 'error');
+        return;
+      }
+    } else {
+      var upi = document.getElementById('pgUpiId').value.trim();
+      if (!/^[\w.\-]+@[\w.\-]+$/.test(upi)) {
+        showToast('Please enter a valid UPI ID', 'error');
+        return;
+      }
+    }
+    runPaymentProcessing(orderPayload, tableId, method);
+  });
+}
+
+function runPaymentProcessing(orderPayload, tableId, method) {
+  document.getElementById('pgPayBtn').disabled = true;
+  document.getElementById('pgCancelBtn').disabled = true;
+  document.getElementById('pgPayBtnLabel').innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
+  document.getElementById('pgStatusLine').innerText = method === 'CARD' ? 'Processing payment securely…' : 'Waiting for customer to approve on their UPI app…';
+
+  setTimeout(function() {
+    closePaymentGateway();
+    finalizeCheckout(orderPayload, tableId);
+  }, method === 'CARD' ? 1400 : 2000);
+}
+
+function closePaymentGateway() {
+  document.getElementById('paymentGatewayModal').style.display = 'none';
 }
 
 function showReceipt(res, orderPayload) {
@@ -582,7 +700,7 @@ function printKOT(items, invoiceNumber, tableId) {
   var kotWindow = window.open('', '_blank', 'height=500,width=350');
   if (!kotWindow) { showToast('Kitchen ticket popup was blocked by the browser.', 'warning'); return; }
   var rows = items.map(function(i) { return '<tr><td style="padding:4px 0;font-size:13px;font-weight:bold;">' + i.name + ' (' + i.portion + ')</td><td style="text-align:right;padding:4px 0;font-size:14px;font-weight:900;">x' + i.quantity + '</td></tr>'; }).join('');
-  kotWindow.document.write('<html><head><title>KOT</title><style>body{font-family:monospace;padding:20px;max-width:300px;}hr{border:1px dashed #000;}</style></head><body><div style="text-align:center;"><h2 style="margin:0;font-size:16px;">KITCHEN ORDER TICKET</h2><p style="margin:4px 0;font-size:11px;">Orderly</p><p style="margin:4px 0;font-size:11px;">' + new Date().toLocaleString('en-IN') + '</p></div><hr><p style="font-size:12px;"><b>Invoice:</b> ' + invoiceNumber + '</p>' + (tableId ? '<p style="font-size:12px;"><b>Table:</b> ' + tableId + '</p>' : '<p style="font-size:12px;">Walk-In / Takeaway</p>') + '<hr><table style="width:100%;border-collapse:collapse;">' + rows + '</table><hr><p style="text-align:center;font-size:10px;">-- KITCHEN COPY --</p></body></html>');
+  kotWindow.document.write('<html><head><title>KOT</title><style>body{font-family:monospace;padding:20px;max-width:300px;}hr{border:1px dashed #000;}</style></head><body><div style="text-align:center;"><h2 style="margin:0;font-size:16px;">KITCHEN ORDER TICKET</h2><p style="margin:4px 0;font-size:11px;">Servemint</p><p style="margin:4px 0;font-size:11px;">' + new Date().toLocaleString('en-IN') + '</p></div><hr><p style="font-size:12px;"><b>Invoice:</b> ' + invoiceNumber + '</p>' + (tableId ? '<p style="font-size:12px;"><b>Table:</b> ' + tableId + '</p>' : '<p style="font-size:12px;">Walk-In / Takeaway</p>') + '<hr><table style="width:100%;border-collapse:collapse;">' + rows + '</table><hr><p style="text-align:center;font-size:10px;">-- KITCHEN COPY --</p></body></html>');
   kotWindow.document.close(); kotWindow.focus();
   setTimeout(function() { kotWindow.print(); kotWindow.close(); }, 400);
 }

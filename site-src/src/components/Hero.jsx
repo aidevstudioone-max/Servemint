@@ -24,7 +24,7 @@ export default function Hero() {
             <motion.span {...rise(0.14)} className="block text-brand">— running the floor.</motion.span>
           </h1>
           <motion.p {...rise(0.24)} className="mb-8 max-w-[46ch] text-[1.08rem] leading-relaxed text-ink-soft text-pretty">
-            Orderly is a complete restaurant POS — instant billing, live table status, reservations, inventory, and daily sales reports, all in one clean dashboard your staff will actually enjoy using.
+            Servemint is a complete restaurant POS — instant billing, live table status, reservations, inventory, and daily sales reports, all in one clean dashboard your staff will actually enjoy using.
           </motion.p>
           <motion.div {...rise(0.32)} className="mb-9 flex flex-wrap gap-3">
             <a href="app.html" className="inline-flex items-center gap-2 rounded-lg bg-brand px-6 py-3.5 font-semibold text-white shadow-[0_10px_22px_rgba(234,88,12,.28)] transition-transform hover:-translate-y-0.5">

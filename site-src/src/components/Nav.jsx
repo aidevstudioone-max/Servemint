@@ -26,7 +26,7 @@ export default function Nav() {
           <span className="grid h-8 w-8 place-items-center rounded-[8px] bg-brand text-white">
             <IconRegister width={16} height={16} />
           </span>
-          Orderly
+          Servemint
         </a>
         <ul className="hidden items-center gap-7 text-sm font-medium text-ink-soft md:flex">
           {LINKS.map((l) => (<li key={l.href}><a href={l.href} className="transition-colors hover:text-brand">{l.label}</a></li>))}

@@ -2,9 +2,9 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Orderly — Live Demo</title>
+    <title>Servemint — Live Demo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,14 +13,14 @@
   </head>
   <body>
 
-  <div class="demo-banner">You're in the Orderly live demo — all data is local to your browser. <a href="index.html">&larr; Back to site</a></div>
+  <div class="demo-banner">You're in the Servemint live demo — all data is local to your browser. <a href="index.html">&larr; Back to site</a></div>
 
   <!-- LOGIN -->
   <div id="authGate" class="min-h-screen flex items-center justify-center p-4">
     <div class="gourmet-panel max-w-md w-full rounded-2xl shadow-2xl p-8">
       <div class="text-center mb-6">
         <div class="w-14 h-14 brand-mark rounded-xl flex items-center justify-center text-white text-xl mx-auto mb-3"><i class="fas fa-utensils"></i></div>
-        <h2 class="text-xl font-black tracking-tight">Orderly</h2>
+        <h2 class="text-xl font-black tracking-tight">Servemint</h2>
         <p class="text-xs mt-1" style="color:var(--text-muted);">Restaurant Point of Sale</p>
       </div>
       <div class="demo-hint"><i class="fas fa-key mr-1"></i> Demo login — Username: <b>admin</b> &nbsp; Password: <b>admin123</b></div>
@@ -45,7 +45,7 @@
       <div class="flex items-center space-x-3 shrink-0">
         <div class="w-9 h-9 brand-mark rounded-lg flex items-center justify-center text-white"><i class="fas fa-crown text-sm"></i></div>
         <div>
-          <h2 class="text-sm font-black tracking-tight">Orderly</h2>
+          <h2 class="text-sm font-black tracking-tight">Servemint</h2>
           <p id="elegantClock" class="text-[10px] font-mono text-orange-500 font-bold mt-0.5"></p>
         </div>
       </div>
@@ -373,7 +373,7 @@
     <div class="gourmet-panel max-w-sm w-full rounded-2xl shadow-2xl p-5 bg-white text-slate-900">
       <div id="receiptContent" class="bg-white p-4 text-slate-900 rounded-xl font-mono text-[11px] border leading-relaxed">
         <div class="text-center border-b border-dashed pb-3 mb-3 border-slate-300">
-          <h2 class="text-base font-black tracking-tight text-slate-900">Orderly</h2>
+          <h2 class="text-base font-black tracking-tight text-slate-900">Servemint</h2>
           <p class="text-[10px] text-slate-500 mt-0.5">Premium Dining System</p>
           <p class="text-[10px] font-bold mt-1 text-slate-700" id="recGstinLabel"></p>
           <p class="text-[9px] text-slate-400 mt-0.5" id="recTimeLabel"></p>
@@ -399,6 +399,13 @@
         <button onclick="printReceiptWindow()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-2 rounded-xl text-xs transition flex items-center justify-center shadow"><i class="fas fa-print mr-2"></i>Print Bill</button>
         <button onclick="closeReceiptModal()" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 rounded-xl text-xs transition shadow">Done</button>
       </div>
+    </div>
+  </div>
+
+  <!-- PAYMENT GATEWAY MODAL -->
+  <div id="paymentGatewayModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" style="display:none;">
+    <div class="gourmet-panel max-w-sm w-full rounded-2xl shadow-2xl p-6">
+      <div id="paymentGatewayBody"></div>
     </div>
   </div>
 
