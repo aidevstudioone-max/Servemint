@@ -9,7 +9,7 @@ export default function Footer() {
           <a href="#preview" className="hover:text-brand">Live Preview</a>
           <a href="#pricing" className="hover:text-brand">Pricing</a>
         </div>
-        <p className="mt-4 text-[.76rem] text-ink-soft/80">© 2026 Servemint. Demo product — all data is stored locally in your browser, no real orders are processed.</p>
+        <p className="mt-4 text-[.76rem] text-ink-soft/80">© 2026 Servemint. Demo product by ठिkaana — all data is stored locally in your browser, no real orders are processed.</p>
       </div>
     </footer>
   )
